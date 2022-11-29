@@ -3,7 +3,13 @@
 #include<string.h>
 #include<stdbool.h>
 #include<time.h>
-#include<windows.h>
+
+#if defined(__linux__)
+	#include<unistd.h>
+#elif defined(_WIN32) || defined(__WIN32__) || defined(__WIN64__)
+	#include<windows.h>
+#endif
+
 
 
 /*
@@ -109,7 +115,7 @@ int main(int argc, char *argv[]){
                 s = *c;
                 if ('0'<=s && s<='9'){
                     if(s=='0' && sub_sum==0){
-                        printf("Param Error: %s", cur_param);
+                        printf("Param Error: %s\n", cur_param);
                         return 1;
                     }
                     sub_sum = sub_sum * 10 + s-'0';
@@ -133,7 +139,7 @@ int main(int argc, char *argv[]){
                             if(check_dhms(3, cur_dhms_flag)){
                                 sum = sum + sub_sum;
                             }else{
-                                printf("Param Error: %s", cur_param);
+                                printf("Param Error: %s\n", cur_param);
                                 return 1;
                             }
                             break;
@@ -141,7 +147,7 @@ int main(int argc, char *argv[]){
                             if(check_dhms(3, cur_dhms_flag)){
                                 sum = sum + sub_sum;
                             }else{
-                                printf("Param Error: %s", cur_param);
+                                printf("Param Error: %s\n", cur_param);
                                 return 1;
                             }
                             break;
@@ -149,7 +155,7 @@ int main(int argc, char *argv[]){
                             if(check_dhms(2, cur_dhms_flag)){
                                 sum = sum + sub_sum*60;
                             }else{
-                                printf("Param Error: %s", cur_param);
+                                printf("Param Error: %s\n", cur_param);
                                 return 1;
                             }
                             break;
@@ -157,7 +163,7 @@ int main(int argc, char *argv[]){
                             if(check_dhms(2, cur_dhms_flag)){
                                 sum = sum + sub_sum*60;
                             }else{
-                                printf("Param Error: %s", cur_param);
+                                printf("Param Error: %s\n", cur_param);
                                 return 1;
                             }
                             break;
@@ -165,7 +171,7 @@ int main(int argc, char *argv[]){
                             if(check_dhms(1, cur_dhms_flag)){
                                 sum = sum + sub_sum*3600;
                             }else{
-                                printf("Param Error: %s", cur_param);
+                                printf("Param Error: %s\n", cur_param);
                                 return 1;
                             }
                             break;
@@ -173,7 +179,7 @@ int main(int argc, char *argv[]){
                             if(check_dhms(1, cur_dhms_flag)){
                                 sum = sum + sub_sum*3600;
                             }else{
-                                printf("Param Error: %s", cur_param);
+                                printf("Param Error: %s\n", cur_param);
                                 return 1;
                             }
                             break;
@@ -181,7 +187,7 @@ int main(int argc, char *argv[]){
                             if(check_dhms(0, cur_dhms_flag)){
                                 sum = sum + sub_sum*24*3600;
                             }else{
-                                printf("Param Error: %s", cur_param);
+                                printf("Param Error: %s\n", cur_param);
                                 return 1;
                             }
                             break;
@@ -189,12 +195,12 @@ int main(int argc, char *argv[]){
                             if(check_dhms(0, cur_dhms_flag)){
                                 sum = sum + sub_sum*24*3600;
                             }else{
-                                printf("Param Error: %s", cur_param);
+                                printf("Param Error: %s\n", cur_param);
                                 return 1;
                             }
                             break;
                         default :
-                            printf("Param Error: %s", cur_param);
+                            printf("Param Error: %s\n", cur_param);
                             return 1;
                     }
                     sub_sum = 0;
@@ -203,7 +209,7 @@ int main(int argc, char *argv[]){
             }
             if(is_num){
                 if(n_flag==true){
-                    printf("Param Error: more than one n flag exist", cur_param);
+                    printf("Param Error: more than one n flag exist\n");
                     return 1;
                 }
                 n_flag = true;
@@ -299,7 +305,7 @@ int main(int argc, char *argv[]){
 
 
     if(cmd_id==0){
-        printf("Param cmd Error: no cmd detected.");
+        printf("Param cmd Error: no cmd detected.\n");
         return 2;
     }
 
@@ -348,12 +354,13 @@ int main(int argc, char *argv[]){
     }
 
     //debug(n_flag, sleep_flag, limit_flag, n_try, sleep_time, limit_run_time, cmd_id, cmd_args);
-
+#if defined(_WIN32) || defined(__WIN32__) || defined(__WIN64__)
     if(sleep_flag==true && sleep_time>0){
         sleep_time = sleep_time * 1000;
     }
-    time_t timep;
-    int start = time(&timep);  // 1970年到当前的秒数
+#endif
+    //time_t timep;
+    int start = time(NULL);  // 1970年到当前的秒数
     int end;
     while(1){
         exitcode = system(cmd_args);
@@ -368,14 +375,18 @@ int main(int argc, char *argv[]){
             }
         }
         if(limit_flag==true){
-            end = time(&timep);
-            if(limit_run_time <= end - start){
+            end = time(NULL);
+            if(limit_run_time <= difftime(end, start)){
                 break;
             }
         }
         if(sleep_flag==true && sleep_time>0){
             //printf("start sleep\n");
-            Sleep(sleep_time);
+#if defined(__linux__)
+	        sleep(sleep_time);
+#elif defined(_WIN32) || defined(__WIN32__) || defined(__WIN64__)
+	        Sleep(sleep_time);
+#endif
             //printf("end sleep\n");
         }
     }
