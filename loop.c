@@ -136,13 +136,6 @@ int main(int argc, char *argv[]){
                     }
                     switch(s){
                         case 's' :
-                            if(check_dhms(3, cur_dhms_flag)){
-                                sum = sum + sub_sum;
-                            }else{
-                                printf("Param Error: %s\n", cur_param);
-                                return 1;
-                            }
-                            break;
                         case 'S' :
                             if(check_dhms(3, cur_dhms_flag)){
                                 sum = sum + sub_sum;
@@ -152,13 +145,6 @@ int main(int argc, char *argv[]){
                             }
                             break;
                         case 'm' :
-                            if(check_dhms(2, cur_dhms_flag)){
-                                sum = sum + sub_sum*60;
-                            }else{
-                                printf("Param Error: %s\n", cur_param);
-                                return 1;
-                            }
-                            break;
                         case 'M' :
                             if(check_dhms(2, cur_dhms_flag)){
                                 sum = sum + sub_sum*60;
@@ -168,13 +154,6 @@ int main(int argc, char *argv[]){
                             }
                             break;
                         case 'h' :
-                            if(check_dhms(1, cur_dhms_flag)){
-                                sum = sum + sub_sum*3600;
-                            }else{
-                                printf("Param Error: %s\n", cur_param);
-                                return 1;
-                            }
-                            break;
                         case 'H' :
                             if(check_dhms(1, cur_dhms_flag)){
                                 sum = sum + sub_sum*3600;
@@ -184,13 +163,6 @@ int main(int argc, char *argv[]){
                             }
                             break;
                         case 'd' :
-                            if(check_dhms(0, cur_dhms_flag)){
-                                sum = sum + sub_sum*24*3600;
-                            }else{
-                                printf("Param Error: %s\n", cur_param);
-                                return 1;
-                            }
-                            break;
                         case 'D' :
                             if(check_dhms(0, cur_dhms_flag)){
                                 sum = sum + sub_sum*24*3600;
