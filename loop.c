@@ -11,6 +11,18 @@
 #endif
 
 
+#define ProgramErrorMsgPrefix "Param Error: "
+
+#define UNICASE(l, u, i, s) \
+    case l : \
+    case u : \
+        if(check_dhms(i, cur_dhms_flag)){ \
+            sum = sum + s; \
+        }else{ \
+            printf(ProgramErrorMsgPrefix "%s\n", cur_param); \
+            return 1; \
+        } \
+        break; 
 
 /*
 loop -h
@@ -135,44 +147,12 @@ int main(int argc, char *argv[]){
                         }
                     }
                     switch(s){
-                        case 's' :
-                        case 'S' :
-                            if(check_dhms(3, cur_dhms_flag)){
-                                sum = sum + sub_sum;
-                            }else{
-                                printf("Param Error: %s\n", cur_param);
-                                return 1;
-                            }
-                            break;
-                        case 'm' :
-                        case 'M' :
-                            if(check_dhms(2, cur_dhms_flag)){
-                                sum = sum + sub_sum*60;
-                            }else{
-                                printf("Param Error: %s\n", cur_param);
-                                return 1;
-                            }
-                            break;
-                        case 'h' :
-                        case 'H' :
-                            if(check_dhms(1, cur_dhms_flag)){
-                                sum = sum + sub_sum*3600;
-                            }else{
-                                printf("Param Error: %s\n", cur_param);
-                                return 1;
-                            }
-                            break;
-                        case 'd' :
-                        case 'D' :
-                            if(check_dhms(0, cur_dhms_flag)){
-                                sum = sum + sub_sum*24*3600;
-                            }else{
-                                printf("Param Error: %s\n", cur_param);
-                                return 1;
-                            }
-                            break;
+                        UNICASE('s', 'S', 3, sub_sum)
+                        UNICASE('m', 'M', 2, sub_sum*60)
+                        UNICASE('h', 'H', 1, sub_sum*3600)
+                        UNICASE('d', 'D', 0, sub_sum*24*3600)
                         default :
-                            printf("Param Error: %s\n", cur_param);
+                            printf(ProgramErrorMsgPrefix "%s\n", cur_param);
                             return 1;
                     }
                     sub_sum = 0;
@@ -181,7 +161,7 @@ int main(int argc, char *argv[]){
             }
             if(is_num){
                 if(n_flag==true){
-                    printf("Param Error: more than one n flag exist\n");
+                    printf(ProgramErrorMsgPrefix "more than one n flag exist\n");
                     return 1;
                 }
                 n_flag = true;
@@ -221,7 +201,7 @@ int main(int argc, char *argv[]){
                         }
 
                         // if(len!=6){
-                        //     //printf("Param Error: %s", cur_param);
+                        //     //printf(ProgramErrorMsgPrefix "%s", cur_param);
                         //     //return 1;
                         //     cmd_id = i;
                         //     //if(c_flag && n_flag && sleep_flag && limit_flag){
@@ -243,14 +223,14 @@ int main(int argc, char *argv[]){
                                 break;
                                 // if(s=='c' || s=='c'){
                                 //     if(c_flag==true){
-                                //         printf("Param Error: more than one \"-c\" or \"-C\" flag exist.");
+                                //         printf(ProgramErrorMsgPrefix "more than one \"-c\" or \"-C\" flag exist.");
                                 //         return 1;
                                 //     }
                                 //     c_flag = true;
                                 // }else{
                                 //     cmd_id = i;
                                 //     break;
-                                //     //printf("Param Error: %s", cur_param);
+                                //     //printf(ProgramErrorMsgPrefix "%s", cur_param);
                                 //     //return 1
                                 // }
                                 
@@ -258,7 +238,7 @@ int main(int argc, char *argv[]){
                         }else{
                             cmd_id = i;
                             break;
-                            //printf("Param Error: %s", cur_param);
+                            //printf(ProgramErrorMsgPrefix "%s", cur_param);
                             //return 1
                         }
                     }
@@ -277,7 +257,7 @@ int main(int argc, char *argv[]){
 
 
     if(cmd_id==0){
-        printf("Param cmd Error: no cmd detected.\n");
+        printf(ProgramErrorMsgPrefix "no cmd detected.\n");
         return 2;
     }
 
@@ -292,7 +272,7 @@ int main(int argc, char *argv[]){
         // }
         // // len = strlen(argv[cmd_id]) - 2;
         // // if(len<=0){
-        // //     printf("Param Error: empty cmd.");
+        // //     printf(ProgramErrorMsgPrefix "empty cmd.");
         // // }
         // // cmd_args = (char*)malloc(len);
         // // strncpy(cmd_args, argv[cmd_id]+1, len);
