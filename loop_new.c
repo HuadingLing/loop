@@ -152,7 +152,7 @@ int main(int argc,char* argv[]){
     simpletime times={0,0,0,0};
     //执行命令的字符串
     char cmd_args[100];
-    //系统执行命令的结果返回码
+    //最大等待时间
     int total_max_time = -1;
     parse_args(argc,argv,&times,cmd_args,&total_max_time);
     printf("cmd:%s\n",cmd_args);
