@@ -3,7 +3,7 @@
 #include<string.h>
 #include<stdbool.h>
 #include<time.h>
-
+#include<getopt.h>
 /*
 loop小工具用于命令行中执行一段容易发生错误的一段命令
 */
